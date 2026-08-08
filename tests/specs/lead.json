@@ -1,0 +1,43 @@
+[
+  {
+    "name": "lead submission reaches confirmation and saves",
+    "steps": [
+      {
+        "send": { "text": "/start" },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "👋 Welcome! Tap a button below to get started." } }]
+      },
+      {
+        "send": { "callback": "lead:start" },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "Share the client's name." } }]
+      },
+      {
+        "send": { "text": "Alex Morgan" },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "Share a phone number, or use Telegram's contact share." } }]
+      },
+      {
+        "send": { "text": "+1 (555) 010-2020" },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "Choose what they're looking to do." } }]
+      },
+      {
+        "send": { "callback": "lead:intent:Buy" },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "Add a short note about what they need." } }]
+      },
+      {
+        "send": { "text": "Looking for a two-bedroom near transit." },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "Review your lead:\nName: Alex Morgan\nPhone: +1 (555) 010-2020\nIntent: Buy\nNote: Looking for a two-bedroom near transit." } }]
+      },
+      {
+        "send": { "callback": "lead:confirm" },
+        "expect": [{ "method": "editMessageText", "payload": { "text": "Your lead has been sent. We'll be in touch shortly." } }]
+      }
+    ]
+  },
+  {
+    "name": "lead submission validates a phone number",
+    "steps": [
+      { "send": { "callback": "lead:start" }, "expect": [{ "method": "sendMessage", "payload": { "text": "Share the client's name." } }] },
+      { "send": { "text": "Sam Lee" }, "expect": [{ "method": "sendMessage" }] },
+      { "send": { "text": "not a phone" }, "expect": [{ "method": "sendMessage", "payload": { "text": "That phone number doesn't look right. Send it again with the digits included." } }] }
+    ]
+  }
+]

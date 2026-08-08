@@ -1,17 +1,15 @@
 import { Composer } from "grammy";
+import type { Ctx } from "../bot.js";
+import { requireOwner } from "../toolkit/index.js";
 
-// SCAFFOLD — generated from the bot blueprint BEFORE the agent runs.
-// Keep a LIVE registration (.command / .callbackQuery / …) so this feature is
-// never an empty stub. Replace the reply body with real logic + copy; if you
-// change the user-facing text, update tests/specs to match EXACTLY.
-// Do NOT rewrite src/bot.ts — buildBot() already auto-loads this module.
-// Menu: wire this into /start via registerMainMenuItem({ label: "Admin", data: "admin:list" }) if the toolkit exposes it.
-
-const composer = new Composer();
+const composer = new Composer<Ctx>();
 
 composer.callbackQuery("admin:list", async (ctx) => {
+  if (!(await requireOwner(ctx))) return;
   await ctx.answerCallbackQuery();
-  await ctx.reply("Open admin lead list from notification (only for owner)");
+  await ctx.editMessageText("Leads are ready to review.", {
+    reply_markup: { inline_keyboard: [[{ text: "View leads", callback_data: "admin:page:0" }]] },
+  });
 });
 
 export default composer;

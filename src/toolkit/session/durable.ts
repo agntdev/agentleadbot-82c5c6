@@ -43,6 +43,7 @@ export interface WorkerEnv {
   BOT_TELEMETRY_URL?: string;
   BOT_TELEMETRY_SECRET?: string;
   BOT_TELEMETRY_SALT?: string;
+  ADMIN_CHAT_ID?: string;
 }
 
 interface Reminder {
@@ -140,6 +141,24 @@ export class ChatDO {
       }
       if (request.method === "DELETE") {
         await this.state.storage.delete("session");
+        return new Response(null, { status: 204 });
+      }
+    }
+
+    // App data is stored in a single, explicitly addressed Durable Object.
+    // Callers provide exact keys and maintain their own collection indices.
+    if (url.pathname.startsWith("/data/")) {
+      const key = `data:${decodeURIComponent(url.pathname.slice("/data/".length))}`;
+      if (request.method === "GET") {
+        const value = await this.state.storage.get<unknown>(key);
+        return value === undefined ? new Response(null, { status: 204 }) : Response.json(value);
+      }
+      if (request.method === "PUT") {
+        await this.state.storage.put(key, await request.json());
+        return new Response(null, { status: 204 });
+      }
+      if (request.method === "DELETE") {
+        await this.state.storage.delete(key);
         return new Response(null, { status: 204 });
       }
     }
