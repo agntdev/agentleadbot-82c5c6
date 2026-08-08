@@ -1,13 +1,13 @@
 [
   {
-    "name": "/admin",
+    "name": "/admin explains missing owner setup",
     "steps": [
       {
         "expect": [
           {
             "method": "sendMessage",
             "payload": {
-              "text": "Open admin interface (only accessible to owner)"
+              "text": "Owner access isn't set up yet."
             }
           }
         ],

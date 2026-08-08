@@ -1,13 +1,13 @@
 [
   {
-    "name": "Admin",
+    "name": "Admin button is protected when owner setup is missing",
     "steps": [
       {
         "expect": [
           {
             "method": "sendMessage",
             "payload": {
-              "text": "Open admin lead list from notification (only for owner)"
+              "text": "Owner access isn't set up yet."
             }
           }
         ],
